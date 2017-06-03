@@ -15,9 +15,5 @@
   {
     "path": "/about",
     "view": "./views/about"
-  },
-  {
-    "path": "/tasks/:status(pending|completed)?",
-    "view": "./views/home"
   }
 ]
