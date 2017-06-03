@@ -8,34 +8,26 @@
  */
 
 import React from 'react';
+import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import Link from '../Link';
-import Navigation from './Navigation';
-import Logo from './Logo';
 import s from './Header.css';
 
 class Header extends React.Component {
 
-  componentDidMount() {
-    window.componentHandler.upgradeElement(this.root);
-  }
-
-  componentWillUnmount() {
-    window.componentHandler.downgradeElements(this.root);
-  }
-
   render() {
     return (
-      <header
-        ref={node => { this.root = node; }}
-        className="mdl-layout__header mdl-layout__header--transparent"
-      >
-        <div className={`mdl-layout__header-row ${s.headerRow}`}>
-          <Link className="mdl-layout-title" to="/">
-            <Logo height={48} />
-          </Link>
-          <div className="mdl-layout-spacer" />
-          <Navigation />
-        </div>
+      <header>
+        <Navbar>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="#">Tempus Health Tracker</a>
+            </Navbar.Brand>
+          </Navbar.Header>
+          <Nav>
+            <NavItem eventKey={1} href="#"><Link to="/">Home</Link></NavItem>
+            <NavItem eventKey={2} href="#"><Link to="/about">About</Link></NavItem>
+          </Nav>
+        </Navbar>
       </header>
     );
   }
