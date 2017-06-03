@@ -1,4 +1,4 @@
-// Copyright © 2014-present Kriasoft, LLC. All rights reserved.
+﻿// Copyright © 2014-present Kriasoft, LLC. All rights reserved.
 // This source code is licensed under the MIT license found in the
 // LICENSE.txt file in the root directory of this source tree.
 
@@ -9,43 +9,79 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Models;
+using System.Threading.Tasks;
+using server.Models.AccountViewModels;
 
 namespace Server.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
-        private readonly SortedList<string, string> _providers;
 
-        public AccountController(SignInManager<User> signInManager, ILoggerFactory loggerFactory)
+        public AccountController(
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            ILoggerFactory loggerFactory)
         {
+            _userManager = userManager;
             _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<AccountController>();
-            _providers = new SortedList<string, string>
+        }
+
+        [HttpPost("/Login")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
             {
-                { "facebook", "Facebook" }
-            };
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation(1, "User logged in.");
+                    return RedirectToLocal(returnUrl);
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning(2, "User account locked out.");
+                    return View("Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
         }
 
-        [HttpGet("login/{provider}")]
-        [AllowAnonymous]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        [HttpPost("/Logout")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
         {
-            // Request a redirect to the external login provider.
-            var providerName = _providers.ContainsKey(provider) ? _providers[provider] : provider;
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(providerName, redirectUrl);
-            return Challenge(properties, providerName);
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation(4, "User logged out.");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        [HttpGet("auth")]
-        [AllowAnonymous]
-        public IActionResult ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        private IActionResult RedirectToLocal(string returnUrl)
         {
-            // TODO: Handle 3rd-party authentication callback
-            return Content("Account Controller => Login Callback", "text/plain");
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
     }
 }

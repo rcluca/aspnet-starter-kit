@@ -1,4 +1,4 @@
-// Copyright © 2014-present Kriasoft, LLC. All rights reserved.
+﻿// Copyright © 2014-present Kriasoft, LLC. All rights reserved.
 // This source code is licensed under the MIT license found in the
 // LICENSE.txt file in the root directory of this source tree.
 
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Server
 {
@@ -69,18 +70,6 @@ namespace Server
             // Enable external authentication provider(s)
             // https://docs.asp.net/en/latest/security/authentication/sociallogins.html
             app.UseIdentity();
-
-            if (!string.IsNullOrEmpty(Configuration["Authentication:Facebook:AppId"]))
-            {
-                app.UseFacebookAuthentication(new FacebookOptions
-                {
-                    AppId = Configuration["Authentication:Facebook:AppId"],
-                    AppSecret = Configuration["Authentication:Facebook:AppSecret"],
-                    Scope = { "email" },
-                    Fields = { "name", "email" },
-                    SaveTokens = true,
-                });
-            }
 
             // Configure ASP.NET MVC
             // https://docs.asp.net/en/latest/mvc/index.html

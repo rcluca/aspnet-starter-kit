@@ -13,7 +13,14 @@
     "chunk": "main"
   },
   {
-    "path": "/about",
-    "view": "./views/about"
+    "path": "/account/login/:returnUrl?",
+    "view": "./views/account/login"
+  },  
+  {
+    "path": "/patient/profile/:id",
+    "view": "./views/patient/profile",
+    "data": {
+      "profile": "GET /api/patient/profile/$id"
+    }
   }
 ]
