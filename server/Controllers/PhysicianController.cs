@@ -12,31 +12,23 @@ namespace server.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class PatientController : Controller
+    public class PhysicianController : Controller
     {
-        public PatientController(ILoggerFactory loggerFactory, IPatientService patientService)
+        public PhysicianController(ILoggerFactory loggerFactory, IPhysicianService physicianService)
         {
             _logger = loggerFactory.CreateLogger<PatientController>();
-            _patientService = patientService;
-        }
-
-        [HttpGet("profile")]
-        public IActionResult GetProfile()
-        {
-            var profile = _patientService.GetProfile(HttpContext.User.Identity.Name);
-
-            return Ok(profile);
+            _physicianService = physicianService;
         }
 
         [HttpGet("names")]
         public IActionResult GetNames()
         {
-            var names = _patientService.GetNames();
+            var names = _physicianService.GetNames();
 
             return Ok(names);
         }
 
         private readonly ILogger _logger;
-        private readonly IPatientService _patientService;
+        private readonly IPhysicianService _physicianService;
     }
 }

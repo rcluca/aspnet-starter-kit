@@ -9,7 +9,8 @@ import {
     Col,
     Button
 } from 'react-bootstrap'
-import PatientApi from '../../api/PatientApi';
+import PatientApi from '../../api/patientApi';
+import PhysicianApi from '../../api/physicianApi';
 import * as roles from '../../common/roles'
 
 class Create extends React.Component {
@@ -29,15 +30,20 @@ class Create extends React.Component {
             user
         } = this.props;
 
-        if (user.role === roles.PATIENT){
-            PatientApi.names()
-            .then((response) => {
-                this.setState({people: response.data});
-            })
-            .catch((error) => {
-                console.log("Error getting patient names.");
-            });
-        }
+        let names;
+
+        if (user.role === roles.PATIENT)
+            names = PhysicianApi.names()
+        else
+            names = PatientApi.names()
+
+        names
+        .then((response) => {
+            this.setState({people: response.data});
+        })
+        .catch((error) => {
+            console.log("Error getting names.");
+        });
     }
     submit(e){
         e.preventDefault();
@@ -58,7 +64,7 @@ class Create extends React.Component {
             user
         } = this.props;
 
-        const personLabel = user.role === roles.PATIENT ? "Patient" : "Physician";
+        const personLabel = user.role === roles.PATIENT ? "Physician" : "Patient";
 
         return (
             <Form horizontal>
@@ -67,9 +73,10 @@ class Create extends React.Component {
                         {personLabel}
                     </Col>
                     <Col sm={4}>
-                        <FormControl componentClass="select" placeholder={`Select a ${personLabel}`}>
+                        <FormControl componentClass="select">
+                            <option key={0} value={0}>{`Select a ${personLabel}`}</option>
                             {this.state.people.map((person) => {
-                                <option value={person.id}>{person.name}</option>
+                                return <option key={person.id} value={person.id}>{person.name}</option>;
                             })}
                         </FormControl>                   
                     </Col>
