@@ -23,5 +23,9 @@
     "data": {
       "profile": "GET /api/patient/profile"
     }
-  }
+  },
+  {
+    "path": "/appointment/create",
+    "view": "./views/appointment/create"
+  }  
 ]

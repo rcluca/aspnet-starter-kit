@@ -62,6 +62,7 @@ namespace Server
 
             services.AddScoped<IDatabaseContext, DatabaseContext>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)

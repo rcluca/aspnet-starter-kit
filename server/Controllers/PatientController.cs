@@ -27,6 +27,14 @@ namespace server.Controllers
             return Ok(profile);
         }
 
+        [HttpGet("names")]
+        public IActionResult GetNames()
+        {
+            var names = _patientService.GetNames();
+
+            return Ok(names);
+        }
+
         private readonly ILogger _logger;
         private readonly IPatientService _patientService;
     }

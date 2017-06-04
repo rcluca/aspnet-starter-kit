@@ -40,6 +40,17 @@ namespace server.Services
             return patientProfileDto;
         }
 
+        public List<NameDto> GetNames()
+        {
+            var names = _databaseContext.Patient.Select(s => new NameDto
+            {
+                Id = s.Id,
+                Name = s.FirstName + " " + s.LastName
+            }).ToList();
+
+            return names;
+        }
+
         private IDatabaseContext _databaseContext;
     }
 }
