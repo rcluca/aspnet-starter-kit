@@ -3,7 +3,6 @@ import {
     Table,
     FormControl
 } from 'react-bootstrap'
-import filter from 'lodash.filter'
 
 class Patients extends React.Component {
     constructor(props){
@@ -23,7 +22,7 @@ class Patients extends React.Component {
 
         const filterValues = e.target.value.split(' ');
 
-        const filteredPatients = filter(allPatients, (patient) => {
+        const filteredPatients = allPatients.filter((patient) => {
             let foundMatch = false;
             filterValues.forEach((filterValue) => {
                 const lowerFilterValue = filterValue.toLowerCase();
