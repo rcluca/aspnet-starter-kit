@@ -26,14 +26,17 @@ class Profile extends React.Component {
             <Grid>
                 <Row>
                     <Col sm={4}>
-                        <p>{firstName}, {lastName}</p>
-                        <p>{formattedDateOfBirth}</p>
+                        <h4>Personal Info</h4>
+                        <p>{firstName} {lastName}</p>
+                        <p>DOB: {formattedDateOfBirth}</p>
                     </Col>
                     <Col sm={4}>
+                        <h4>Contact</h4>
                         <p>{email}</p>
                         <p>{phoneNumber}</p>
                     </Col>
                     <Col sm={4}>
+                        <h4>Address</h4>
                         <address>
                             <p>{address1}{address2 ? `, ${address2}` : ''}</p>
                             <p>{city}, {state}</p>
