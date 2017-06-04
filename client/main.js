@@ -19,6 +19,7 @@ import configureStore from './configureStore';
 import initialState from './store/initialState';
 import router from './router';
 import history from './history';
+import Layout from './components/Layout';
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
 const store = configureStore(initialState);
@@ -26,7 +27,7 @@ const store = configureStore(initialState);
 const container = document.getElementById('container');
 
 function renderComponent(component) {
-  ReactDOM.render(<Provider store={store}>{component}</Provider>, container);
+  ReactDOM.render(<Provider store={store}><Layout>{component}</Layout></Provider>, container);
 }
 
 // Find and render a web page matching the current URL path,

@@ -54,6 +54,8 @@ namespace Server
                 .AddViews()
                 .AddRazorViewEngine()
                 .AddJsonFormatters();
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)
@@ -70,6 +72,15 @@ namespace Server
             // Enable external authentication provider(s)
             // https://docs.asp.net/en/latest/security/authentication/sociallogins.html
             app.UseIdentity();
+
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
 
             // Configure ASP.NET MVC
             // https://docs.asp.net/en/latest/mvc/index.html

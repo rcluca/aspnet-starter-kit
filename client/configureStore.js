@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import Store from './store';
+import reducers from './store/index';
 
 function buildRootReducer(allReducers) {
   return combineReducers(Object.assign({}, allReducers));
@@ -16,7 +16,7 @@ export default function (initialState, middlewares = []) {
         devToolsExtension ? devToolsExtension() : f => f)(createStore);
 
     // Combine all reducers and instantiate the app-wide store instance
-  const allReducers = buildRootReducer(Store);
+  const allReducers = buildRootReducer(reducers);
   const store = createStoreWithMiddleware(allReducers, initialState);
 
     // Enable Webpack hot module replacement for reducers

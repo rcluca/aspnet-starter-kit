@@ -19,6 +19,7 @@
   {
     "path": "/patient/profile/:id",
     "view": "./views/patient/profile",
+    "credentials": "include",
     "data": {
       "profile": "GET /api/patient/profile/$id"
     }

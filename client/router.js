@@ -63,8 +63,9 @@ function resolve(routes, context) {
             const query = route.data[key];
             const method = query.substring(0, query.indexOf(' ')); // GET
             const url = query.substr(query.indexOf(' ') + 1);      // /api/tasks/$id
+            const credentials = route.credentials ? route.credentials : 'same-origin';
             // TODO: Replace query parameters with actual values coming from `params`
-            return fetch(url, { method }).then(resp => resp.json());
+            return fetch(url, { method, credentials }).then(resp => resp.json());
           }),
         ]).then(([Page, ...data]) => {
           const props = keys.reduce((result, key, i) => ({ ...result, [key]: data[i] }), {});

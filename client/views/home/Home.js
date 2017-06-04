@@ -8,7 +8,6 @@
  */
 
 import React, { PropTypes } from 'react';
-import Layout from '../../components/Layout';
 
 const title = 'ASP.NET Core Starter Kit';
 const link = 'https://github.com/kriasoft/aspnet-starter-kit';
@@ -25,9 +24,9 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Layout>
+      <div>
 
-      </Layout>
+      </div>
     );
   }
 }

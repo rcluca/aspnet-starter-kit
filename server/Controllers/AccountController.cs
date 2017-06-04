@@ -11,10 +11,12 @@ using Microsoft.Extensions.Logging;
 using Server.Models;
 using System.Threading.Tasks;
 using server.Models.AccountViewModels;
+using System;
 
 namespace Server.Controllers
 {
     [Authorize]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -31,11 +33,12 @@ namespace Server.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        [HttpPost("/Login")]
+        [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model, [FromBody] string returnUrl = null)
         {
+            _logger.LogInformation(1, "Initiating login.");
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -44,12 +47,13 @@ namespace Server.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    _logger.LogInformation(2, "User logged in.");
+                    //return RedirectToLocal(returnUrl);
+                    return Ok(new { role = User.IsInRole("Patient") ? "patient" : "physician" });
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning(2, "User account locked out.");
+                    _logger.LogWarning(3, "User account locked out.");
                     return View("Lockout");
                 }
                 else
@@ -59,11 +63,13 @@ namespace Server.Controllers
                 }
             }
 
+            _logger.LogInformation(4, "Login modelstate is invalid.");
+
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        [HttpPost("/Logout")]
+        [HttpPost("logout")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
