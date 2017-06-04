@@ -5,6 +5,10 @@ class AccountApi {
         return axios.post('/api/account/login', credentials);
     }
 
+    static logout(){
+        return axios.post('/api/account/logout');
+    }
+
     static getUserData(){
         return axios.get('/api/account/user-data');
     }

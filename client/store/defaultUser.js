@@ -1,4 +1,4 @@
-import AccountApi from '../api/AccountApi'
+import AccountApi from '../api/accountApi'
 
 export default new Promise((resolve, reject) => {
     AccountApi.getUserData()

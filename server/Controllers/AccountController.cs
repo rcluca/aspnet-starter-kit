@@ -35,7 +35,6 @@ namespace Server.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromBody] LoginDto model, [FromBody] string returnUrl = null)
         {
             _logger.LogInformation(1, "Initiating login.");
@@ -49,38 +48,39 @@ namespace Server.Controllers
                 {
                     _logger.LogInformation(2, "User logged in.");
                     //return RedirectToLocal(returnUrl);
-                    return Ok(new { role = User.IsInRole("Patient") ? "patient" : "physician" });
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    return Ok(new { role = roles.Contains("Patient") ? "patient" : "physician" });
                 }
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(3, "User account locked out.");
-                    return View("Lockout");
+                    //return View("Lockout");
+                    return BadRequest();
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
+                    return BadRequest();
                 }
             }
 
             _logger.LogInformation(4, "Login modelstate is invalid.");
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return BadRequest();
         }
 
         [HttpPost("logout")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return Ok();
         }
 
         [HttpGet("user-data")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public IActionResult GetUserData()
         {
             if (User.Identity.IsAuthenticated)

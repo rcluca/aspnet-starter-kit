@@ -9,7 +9,7 @@ import {
     Col,
     Button
 } from 'react-bootstrap'
-import AccountApi from '../../api/AccountApi';
+import AccountApi from '../../api/accountApi';
 import * as actionTypes from '../../reducers/actionTypes'
 import * as roles from '../../common/roles'
 

@@ -3,8 +3,23 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { connect } from 'react-redux';
 import Link from '../Link';
 import s from './Header.css';
+import AccountApi from '../../api/accountApi'
+import history from '../../history';
+import * as actionTypes from '../../reducers/actionTypes'
 
 class Header extends React.Component {
+  logout(){
+    AccountApi.logout()
+    .then(() => {
+      this.props.dispatch({
+          type: actionTypes.LOGOUT_SUCCESS
+      });
+      history.push('/account/loggedOut');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
   render() {
     const {
@@ -20,7 +35,7 @@ class Header extends React.Component {
     (
       <Nav pullRight>
         <NavItem eventKey={1} href="#">{user.email} ({user.role})</NavItem>
-        <NavItem eventKey={2} href="#"><Link to="/account/logout">Logout</Link></NavItem>
+        <NavItem eventKey={2} href="#" onClick={() => this.logout()}>Logout</NavItem>
       </Nav>      
     )
 
