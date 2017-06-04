@@ -20,6 +20,15 @@ namespace server.Controllers
             _physicianService = physicianService;
         }
 
+        [HttpGet("patients")]
+        [Authorize(Roles = Roles.Physician)]
+        public IActionResult GetPatients()
+        {
+            var patients = _physicianService.GetPatients();
+
+            return Ok(patients);
+        }
+
         [HttpGet("names")]
         public IActionResult GetNames()
         {

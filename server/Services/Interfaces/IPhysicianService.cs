@@ -8,6 +8,7 @@ namespace server.Services.Interfaces
 {
     public interface IPhysicianService
     {
+        List<PatientDto> GetPatients();
         List<NameDto> GetNames();
     }
 }

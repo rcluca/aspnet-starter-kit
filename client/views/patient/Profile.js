@@ -123,7 +123,7 @@ class Profile extends React.Component {
                     </Row>
                 </Grid>
                 <h4>Appointments <small><Link to="/appointment/create">Schedule an Appointment</Link></small></h4>
-                <Table striped bordered condensed>
+                <Table condensed>
                     <thead>
                     <tr>
                         <th>Id</th>

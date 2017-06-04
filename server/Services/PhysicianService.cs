@@ -15,6 +15,22 @@ namespace server.Services
             _databaseContext = databaseContext;
         }
 
+        public List<PatientDto> GetPatients()
+        {
+            var patients = _databaseContext.Patient.Select(patient => new PatientDto
+            {
+                Id = patient.Id,
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                Email = patient.Email,
+                PhoneNumber = patient.PhoneNumber,
+                City = patient.City,
+                State = patient.State
+            }).ToList();
+
+            return patients;
+        }
+
         public List<NameDto> GetNames()
         {
             var names = _databaseContext.Physician.Select(s => new NameDto

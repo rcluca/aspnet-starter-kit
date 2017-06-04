@@ -29,6 +29,14 @@
     }
   },
   {
+    "path": "/physician/patients",
+    "view": "./views/physician/patients",
+    "credentials": "include",
+    "data": {
+      "patients": "GET /api/physician/patients"
+    }
+  },  
+  {
     "path": "/appointment/create",
     "view": "./views/appointment/create"
   }  
