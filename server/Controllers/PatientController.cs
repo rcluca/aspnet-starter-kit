@@ -19,19 +19,10 @@ namespace server.Controllers
             _logger = loggerFactory.CreateLogger<PatientController>();
         }
 
-        [HttpGet("profile/{id}")]
-        public async Task<IActionResult> GetProfile(int id)
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
         {
-            var hasAuthCookie = HttpContext.Request.Cookies.Any(w => w.Key == ".AspNetCore.Identity.Application");
-
-            _logger.LogInformation(1, "Has auth cookie: " + hasAuthCookie);
-            _logger.LogInformation(1, "Cookie count: " + HttpContext.Request.Cookies.Count);
-            return Ok(new Profile { Name = "Getting profile..." });
-        }
-
-        class Profile
-        {
-            public string Name { get; set; }
+            return Ok(new { Name = "Getting profile..." });
         }
     }
 }

@@ -29,13 +29,9 @@ class Header extends React.Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">Tempus Health Tracker</a>
+              <Link to="/">Tempus Health Tracker</Link>
             </Navbar.Brand>
           </Navbar.Header>
-          <Nav>
-            <NavItem eventKey={1} href="#"><Link to="/">Home</Link></NavItem>
-            <NavItem eventKey={2} href="#"><Link to="/about">About</Link></NavItem>
-          </Nav>
           {accountNav}
         </Navbar>
       </header>

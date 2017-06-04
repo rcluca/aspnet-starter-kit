@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap'
 import AccountApi from '../../api/AccountApi';
 import * as actionTypes from '../../reducers/actionTypes'
+import * as roles from '../../common/roles'
 
 class Login extends React.Component {
     constructor(props){
@@ -31,7 +32,10 @@ class Login extends React.Component {
                 email: this.state.email,
                 role: response.data.role
             });
-            history.push('/');
+            if (response.data.role === roles.PATIENT)
+                history.push('/patient/profile');
+            else
+                history.push('/physician/patients');
         })
         .catch((error) => {
             console.log('Error logging in.');

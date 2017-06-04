@@ -17,11 +17,11 @@
     "view": "./views/account/login"
   },  
   {
-    "path": "/patient/profile/:id",
+    "path": "/patient/profile",
     "view": "./views/patient/profile",
     "credentials": "include",
     "data": {
-      "profile": "GET /api/patient/profile/$id"
+      "profile": "GET /api/patient/profile"
     }
   }
 ]

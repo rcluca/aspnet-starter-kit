@@ -25,7 +25,12 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-
+        <h3>
+          Welcome to the ancient world!
+        </h3>
+        <p>
+          Here we do medicine right!  Login at the top to begin.
+        </p>
       </div>
     );
   }
