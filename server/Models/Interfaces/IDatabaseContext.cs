@@ -8,6 +8,8 @@ namespace server.Models.Interfaces
 {
     public interface IDatabaseContext
     {
+        int SaveChanges();
+
         DbSet<Appointment> Appointment { get; set; }
         DbSet<AppointmentPurpose> AppointmentPurpose { get; set; }
         DbSet<Patient> Patient { get; set; }

@@ -31,6 +31,11 @@ namespace Server.Models
                 .IsUnique();
         }
 
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
+        }
+
         public virtual DbSet<Appointment> Appointment { get; set; }
         public virtual DbSet<AppointmentPurpose> AppointmentPurpose { get; set; }
         public virtual DbSet<Patient> Patient { get; set; }

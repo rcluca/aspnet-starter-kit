@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Server.Models;
 using System.Threading.Tasks;
 using System;
-using server.Dtos.Account;
+using server.Dtos;
 
 namespace Server.Controllers
 {

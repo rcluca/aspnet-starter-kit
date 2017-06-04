@@ -1,4 +1,4 @@
-﻿using server.Dtos.Account;
+﻿using server.Dtos;
 using server.Models.Interfaces;
 using server.Services.Interfaces;
 using System;

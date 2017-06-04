@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import Datetime from 'react-datetime'
 import history from '../../history';
 import {
     Form,
@@ -55,19 +56,45 @@ class Create extends React.Component {
             console.log(error);
         });
     }
+    selectPerson(e){
+        const {
+            user
+        } = this.props;      
+
+        if (user.role === roles.PATIENT)
+            this.setState({ physicianId: parseInt(e.target.value) });
+        else
+            this.setState({ patientId: parseInt(e.target.value) });
+    }
     submit(e){
         e.preventDefault();
 
-        // AccountApi.login(this.state)
-        // .then((response) => {
-        //     if (response.data.role === roles.PATIENT)
-        //         history.push('/patient/profile');
-        //     else
-        //         history.push('/physician/patients');
-        // })
-        // .catch((error) => {
-        //     console.log('Error logging in.');
-        // });
+        const {
+            user
+        } = this.props;
+
+        const {
+            patientId,
+            physicianId,
+            dateAndTime,
+            purposeId
+        } = this.state;
+
+        AppointmentApi.create({
+            patientId,
+            physicianId,
+            dateAndTime,
+            purposeId
+        })
+        .then((response) => {
+            if (user.role === roles.PATIENT)
+                history.push('/patient/profile');
+            else
+                history.push('/physician/patients');
+        })
+        .catch((error) => {
+            console.log('Error creating appointment.');
+        });
     }
     render() {
         const {
@@ -83,7 +110,7 @@ class Create extends React.Component {
                         {personLabel}
                     </Col>
                     <Col sm={4}>
-                        <FormControl componentClass="select">
+                        <FormControl componentClass="select" onChange={(e) => this.selectPerson(e)}>
                             <option key={0} value={0}>{`Select a ${personLabel}`}</option>
                             {this.state.people.map((person) => {
                                 return <option key={person.id} value={person.id}>{person.name}</option>;
@@ -93,17 +120,30 @@ class Create extends React.Component {
                 </FormGroup>
                 <FormGroup>
                     <Col componentClass={ControlLabel} sm={2}>
+                        Date and Time
+                    </Col>
+                    <Col sm={4}>
+                        <Datetime onChange={(momentDate) => this.setState({ dateAndTime: momentDate.format() })}/>               
+                    </Col>
+                </FormGroup>                 
+                <FormGroup>
+                    <Col componentClass={ControlLabel} sm={2}>
                         Purposes
                     </Col>
                     <Col sm={4}>
-                        <FormControl componentClass="select">
+                        <FormControl componentClass="select" onChange={(e) => this.setState({ purposeId: parseInt(e.target.value) })}>
                             <option key={0} value={0}>Select a Purpose</option>
                             {this.state.purposes.map((purpose) => {
                                 return <option key={purpose.id} value={purpose.id}>{purpose.name}</option>;
                             })}
                         </FormControl>                   
                     </Col>
-                </FormGroup>                
+                </FormGroup>
+                <Col smOffset={2}>
+                    <Button bsStyle="primary" onClick={(e) => this.submit(e)}>
+                        Create
+                    </Button>
+                </Col>
             </Form>
         );
     }

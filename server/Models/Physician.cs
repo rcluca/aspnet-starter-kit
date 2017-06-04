@@ -18,6 +18,10 @@ namespace server.Models
         [StringLength(255)]
         public string LastName { get; set; }
 
+        [Required]
+        [StringLength(254)]
+        public string Email { get; set; }
+
         public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }
