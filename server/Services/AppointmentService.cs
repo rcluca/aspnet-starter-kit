@@ -70,6 +70,20 @@ namespace server.Services
             _databaseContext.SaveChanges();
         }
 
+        public void Cancel(AppointmentCancellationDto appointmentCancellation)
+        {
+            var existingAppointment = _databaseContext.Appointment.SingleOrDefault(s => s.Id == appointmentCancellation.Id);
+
+            if (existingAppointment == null)
+                throw new ArgumentException($"No appointment exists with id '{appointmentCancellation.Id}'");
+
+            existingAppointment.IsCanceled = true;
+            existingAppointment.CancellationReason = appointmentCancellation.CancellationReason;
+            _databaseContext.Appointment.Update(existingAppointment);
+
+            _databaseContext.SaveChanges();
+        }
+
         private IDatabaseContext _databaseContext;
     }
 }

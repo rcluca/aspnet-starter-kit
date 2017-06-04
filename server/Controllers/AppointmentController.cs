@@ -53,6 +53,17 @@ namespace server.Controllers
             return Ok();
         }
 
+        [HttpPut("cancel")]
+        public IActionResult Cancel([FromBody] AppointmentCancellationDto appointmentCancellation)
+        {
+            _logger.LogInformation("Canceling appointment.");
+            _logger.LogInformation("Cancellation Reason: " + appointmentCancellation.CancellationReason);
+
+            _appointmentService.Cancel(appointmentCancellation);
+
+            return Ok();
+        }
+
         private readonly ILogger _logger;
         private readonly IAppointmentService _appointmentService;
         private readonly UserManager<User> _userManager;

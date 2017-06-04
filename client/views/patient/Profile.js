@@ -3,12 +3,61 @@ import {
     Grid,
     Row,
     Col,
-    Table
+    Table,
+    Button,
+    Modal,
+    Form,
+    FormGroup,
+    FormControl,
+    ControlLabel
 } from 'react-bootstrap'
 import orderBy from 'lodash.orderby'
 import Link from '../../components/Link';
+import AppointmentApi from '../../api/appointmentApi'
 
 class Profile extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            cancellingAppointment: false,
+            appointmentToCancelId: 0,
+            cancellationReason: ""
+        }
+    }
+    cancelAppointment(e){
+        e.preventDefault();
+
+        const {
+            user
+        } = this.props;
+
+        const {
+            appointmentToCancelId,
+            cancellationReason
+        } = this.state;
+
+        AppointmentApi.cancel({
+            id: appointmentToCancelId,
+            cancellationReason
+        })
+        .then(() => {
+            this.setState({
+                cancellingAppointment: false
+            })            
+            alert("Appointment was successfully canceled.");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    hideCancelModal(){
+        this.setState({
+            cancellingAppointment: false,
+            appointmentToCancelId: 0,
+            cancellationReason: ""            
+        })
+    }
     render() {
         const {
             firstName,
@@ -29,6 +78,28 @@ class Profile extends React.Component {
 
         return (
             <div>
+                <Modal show={this.state.cancellingAppointment} onHide={() => this.hideCancelModal()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Cancel Appointment {this.state.appointmentToCancelId}</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        <Form horizontal>
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={2}>
+                                    Cancellation Reason
+                                </Col>
+                                <Col sm={10}>
+                                    <FormControl componentClass="textarea" onChange={(e) => this.setState({ cancellationReason: e.target.value })} />                
+                                </Col>
+                            </FormGroup>
+                        </Form>                    
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button bsStyle="warning" onClick={(e) => this.cancelAppointment(e)}>Cancel Appointment</Button>
+                    </Modal.Footer>
+                </Modal>
                 <Grid>
                     <Row>
                         <Col sm={4}>
@@ -64,6 +135,7 @@ class Profile extends React.Component {
                         <th>Is Approved</th>
                         <th>Is Canceled</th>
                         <th>Cancelation Reason</th>
+                        <th />
                     </tr>
                     </thead>
                     <tbody>
@@ -79,6 +151,11 @@ class Profile extends React.Component {
                                     <td>{appointment.isApproved ? "Yes" : "No"}</td>
                                     <td>{appointment.isCanceled ? "Yes" : "No"}</td>
                                     <td>{appointment.cancelationReason}</td>
+                                    <td>
+                                        <Button bsStyle="warning" onClick={() => this.setState({ cancellingAppointment: true, appointmentToCancelId: appointment.id})}>
+                                            Cancel
+                                        </Button>                                        
+                                    </td>
                                 </tr>
                             );
                         })}

@@ -8,9 +8,10 @@ using Server.Models;
 namespace server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20170604211950_CorrectedNamingOfAppointmentCancellation")]
+    partial class CorrectedNamingOfAppointmentCancellation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
