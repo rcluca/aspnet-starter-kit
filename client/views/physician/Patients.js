@@ -1,12 +1,59 @@
 import React, { PropTypes } from 'react';
 import {
-    Table
+    Table,
+    FormControl
 } from 'react-bootstrap'
+import filter from 'lodash.filter'
 
 class Patients extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            allPatients: this.props.patients,
+            filteredPatients: null
+        }
+    }
+    filterByName(e){
+        e.preventDefault();
+
+        const {
+            allPatients
+        } = this.state;
+
+        const filterValues = e.target.value.split(' ');
+
+        const filteredPatients = filter(allPatients, (patient) => {
+            let foundMatch = false;
+            filterValues.forEach((filterValue) => {
+                const lowerFilterValue = filterValue.toLowerCase();
+                if (patient.firstName.toLowerCase().includes(lowerFilterValue)
+                    || patient.lastName.toLowerCase().includes(lowerFilterValue)){
+                        foundMatch = true;
+                        return;
+                    }
+            });
+            return foundMatch;
+        });
+
+        this.setState({ filteredPatients });
+    }
     render() {
+        const {
+            allPatients,
+            filteredPatients
+        } = this.state;
+
+        const patients = filteredPatients ? filteredPatients : allPatients;
+
         return (
             <div>
+                <FormControl
+                    type="text"
+                    placeholder="Filter by name..."
+                    onBlur={(e) => this.filterByName(e)}
+                />
+                &nbsp;
                 <Table condensed>
                     <thead>
                     <tr>
@@ -19,7 +66,7 @@ class Patients extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {this.props.patients.map((patient) => {
+                        {patients.map((patient) => {
                             return (
                                 <tr key={patient.id}>
                                     <td>{patient.id}</td>
