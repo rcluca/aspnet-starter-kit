@@ -78,6 +78,27 @@ namespace Server.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        [HttpGet("user-data")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult GetUserData()
+        {
+            if (User.Identity.IsAuthenticated)
+                return Ok(new
+                {
+                    IsUserLoggedIn = true,
+                    Email = User.Identity.Name,
+                    Role = User.IsInRole("Patient") ? "patient" : "physician"
+                });
+            else
+                return Ok(new
+                {
+                    IsUserLoggedIn = false,
+                    Email = "",
+                    Role = ""
+                });
+        }
+
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

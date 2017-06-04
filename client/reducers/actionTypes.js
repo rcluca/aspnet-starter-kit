@@ -1,1 +1,2 @@
+export const DEFAULT_USER = 'DEFAULT_USER';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';

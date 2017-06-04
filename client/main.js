@@ -16,43 +16,57 @@ import FastClick from 'fastclick';
 import { Provider } from 'react-redux';
 
 import configureStore from './configureStore';
-import initialState from './store/initialState';
+import initialState from './store/initialState'
+import defaultUser from './store/defaultUser';
 import router from './router';
 import history from './history';
 import Layout from './components/Layout';
+import { DEFAULT_USER } from './reducers/actionTypes'
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
+
 const store = configureStore(initialState);
 
-const container = document.getElementById('container');
-
-function renderComponent(component) {
-  ReactDOM.render(<Provider store={store}><Layout>{component}</Layout></Provider>, container);
-}
-
-// Find and render a web page matching the current URL path,
-// if such page is not found then render an error page (see routes.json, core/router.js)
-function render(location) {
-  router.resolve(routes, location)
-    .then(renderComponent)
-    .catch(error => router.resolve(routes, { ...location, error }).then(renderComponent));
-}
-
-// Handle client-side navigation by using HTML5 History API
-// For more information visit https://github.com/ReactJSTraining/history/tree/master/docs#readme
-history.listen(render);
-render(history.getCurrentLocation());
-
-// Eliminates the 300ms delay between a physical tap
-// and the firing of a click event on mobile browsers
-// https://github.com/ftlabs/fastclick
-FastClick.attach(document.body);
-
-// Enable Hot Module Replacement (HMR)
-if (module.hot) {
-  module.hot.accept('./routes.json', () => {
-    // eslint-disable-next-line global-require, import/newline-after-import
-    routes = require('./routes.json');
-    render(history.getCurrentLocation());
+defaultUser
+.then((user) => {
+  store.dispatch({
+    type: DEFAULT_USER,
+    user
   });
-}
+
+  const container = document.getElementById('container');
+
+  function renderComponent(component) {
+    ReactDOM.render(<Provider store={store}><Layout>{component}</Layout></Provider>, container);
+  }
+
+  // Find and render a web page matching the current URL path,
+  // if such page is not found then render an error page (see routes.json, core/router.js)
+  function render(location) {
+    router.resolve(routes, location)
+      .then(renderComponent)
+      .catch(error => router.resolve(routes, { ...location, error }).then(renderComponent));
+  }
+
+  // Handle client-side navigation by using HTML5 History API
+  // For more information visit https://github.com/ReactJSTraining/history/tree/master/docs#readme
+  history.listen(render);
+  render(history.getCurrentLocation());
+
+  // Eliminates the 300ms delay between a physical tap
+  // and the firing of a click event on mobile browsers
+  // https://github.com/ftlabs/fastclick
+  FastClick.attach(document.body);
+
+  // Enable Hot Module Replacement (HMR)
+  if (module.hot) {
+    module.hot.accept('./routes.json', () => {
+      // eslint-disable-next-line global-require, import/newline-after-import
+      routes = require('./routes.json');
+      render(history.getCurrentLocation());
+    });
+  }
+})
+.catch((error) => {
+  console.log(error);
+});
