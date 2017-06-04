@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using server.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,21 @@ namespace server.Controllers
     [Route("api/[controller]")]
     public class PatientController : Controller
     {
-        private readonly ILogger _logger;
-
-        public PatientController(ILoggerFactory loggerFactory)
+        public PatientController(ILoggerFactory loggerFactory, IPatientService patientService)
         {
             _logger = loggerFactory.CreateLogger<PatientController>();
+            _patientService = patientService;
         }
 
         [HttpGet("profile")]
-        public async Task<IActionResult> GetProfile()
+        public IActionResult GetProfile()
         {
-            return Ok(new { Name = "Getting profile..." });
+            var profile = _patientService.GetProfile(HttpContext.User.Identity.Name);
+
+            return Ok(profile);
         }
+
+        private readonly ILogger _logger;
+        private readonly IPatientService _patientService;
     }
 }

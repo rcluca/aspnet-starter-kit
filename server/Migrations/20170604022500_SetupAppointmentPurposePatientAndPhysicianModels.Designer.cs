@@ -9,9 +9,10 @@ using server.Enums;
 namespace server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20170604022500_SetupAppointmentPurposePatientAndPhysicianModels")]
+    partial class SetupAppointmentPurposePatientAndPhysicianModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -203,9 +204,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<int>("PhoneNumber");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -216,9 +215,6 @@ namespace server.Migrations
                         .HasMaxLength(10);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Patient");
                 });
@@ -295,47 +291,55 @@ namespace server.Migrations
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
                         .WithMany("Claims")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Server.Models.User")
                         .WithMany("Claims")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("Server.Models.User")
                         .WithMany("Logins")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Server.Models.User")
                         .WithMany("Roles")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("server.Models.Appointment", b =>
                 {
                     b.HasOne("server.Models.Patient", "Patient")
                         .WithMany("Appointments")
-                        .HasForeignKey("PatientId");
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("server.Models.Physician", "Physician")
                         .WithMany("Appointments")
-                        .HasForeignKey("PhysicianId");
+                        .HasForeignKey("PhysicianId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("server.Models.AppointmentPurpose", "Purpose")
                         .WithMany("Appointments")
-                        .HasForeignKey("PurposeId");
+                        .HasForeignKey("PurposeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

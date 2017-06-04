@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Models;
 using System.Threading.Tasks;
-using server.Models.AccountViewModels;
 using System;
+using server.Dtos.Account;
 
 namespace Server.Controllers
 {
@@ -36,7 +36,7 @@ namespace Server.Controllers
         [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model, [FromBody] string returnUrl = null)
+        public async Task<IActionResult> Login([FromBody] LoginDto model, [FromBody] string returnUrl = null)
         {
             _logger.LogInformation(1, "Initiating login.");
             ViewData["ReturnUrl"] = returnUrl;

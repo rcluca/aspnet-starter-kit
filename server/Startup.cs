@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Models;
 using Microsoft.AspNetCore.Http;
+using server.Services.Interfaces;
+using server.Services;
+using server.Models.Interfaces;
 
 namespace Server
 {
@@ -56,6 +59,9 @@ namespace Server
                 .AddJsonFormatters();
 
             services.AddCors();
+
+            services.AddScoped<IDatabaseContext, DatabaseContext>();
+            services.AddScoped<IPatientService, PatientService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)

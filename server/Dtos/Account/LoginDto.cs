@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace server.Models.AccountViewModels
+namespace server.Dtos.Account
 {
-    public class LoginViewModel
+    public class LoginDto
     {
         [Required]
         [EmailAddress]

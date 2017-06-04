@@ -9,9 +9,10 @@ using server.Enums;
 namespace server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20170604022532_RestrictCascadeOnDelete")]
+    partial class RestrictCascadeOnDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -203,9 +204,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<int>("PhoneNumber");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -216,9 +215,6 @@ namespace server.Migrations
                         .HasMaxLength(10);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Patient");
                 });
