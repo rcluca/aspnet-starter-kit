@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap'
 import PatientApi from '../../api/patientApi';
 import PhysicianApi from '../../api/physicianApi';
+import AppointmentApi from '../../api/appointmentApi';
 import * as roles from '../../common/roles'
 
 class Create extends React.Component {
@@ -20,9 +21,10 @@ class Create extends React.Component {
         this.state = {
             patientId: 0,
             physicianId: 0,
+            people: [],
             dateAndTime: null,
             purposeId: 0,
-            people: []
+            purposes: []
         };
     }
     componentDidMount(){
@@ -33,16 +35,24 @@ class Create extends React.Component {
         let names;
 
         if (user.role === roles.PATIENT)
-            names = PhysicianApi.names()
+            names = PhysicianApi.getNames()
         else
-            names = PatientApi.names()
+            names = PatientApi.getNames()
 
         names
         .then((response) => {
             this.setState({people: response.data});
         })
         .catch((error) => {
-            console.log("Error getting names.");
+            console.log(error);
+        });
+
+        AppointmentApi.getPurposes()
+        .then((response) => {
+            this.setState({purposes: response.data});
+        })
+        .catch((error) => {
+            console.log(error);
         });
     }
     submit(e){
@@ -81,6 +91,19 @@ class Create extends React.Component {
                         </FormControl>                   
                     </Col>
                 </FormGroup>
+                <FormGroup>
+                    <Col componentClass={ControlLabel} sm={2}>
+                        Purposes
+                    </Col>
+                    <Col sm={4}>
+                        <FormControl componentClass="select">
+                            <option key={0} value={0}>Select a Purpose</option>
+                            {this.state.purposes.map((purpose) => {
+                                return <option key={purpose.id} value={purpose.id}>{purpose.name}</option>;
+                            })}
+                        </FormControl>                   
+                    </Col>
+                </FormGroup>                
             </Form>
         );
     }

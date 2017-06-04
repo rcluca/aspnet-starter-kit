@@ -19,10 +19,13 @@ namespace server.Controllers
             _appointmentService = appointmentService;
         }
 
-        [HttpGet("profile")]
-        public IActionResult GetProfile()
+        [HttpGet("purposes")]
+        public IActionResult GetPurposes()
         {
-            return Ok();
+            _logger.LogInformation("Getting purposes.");
+            var purposes = _appointmentService.GetPurposes();
+
+            return Ok(purposes);
         }
 
         private readonly ILogger _logger;

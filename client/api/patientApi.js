@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class PatientApi {
-    static names(){
+    static getNames(){
         return axios.get('/api/patient/names');
     }
 }
