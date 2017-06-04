@@ -6,6 +6,7 @@ import {
     Table
 } from 'react-bootstrap'
 import orderBy from 'lodash.orderby'
+import Link from '../../components/Link';
 
 class Profile extends React.Component {
     render() {
@@ -50,7 +51,7 @@ class Profile extends React.Component {
                         </Col>                                        
                     </Row>
                 </Grid>
-                <h4>Appointments</h4>
+                <h4>Appointments <small><Link to="/appointment/create">Schedule an Appointment</Link></small></h4>
                 <Table striped bordered condensed>
                     <thead>
                     <tr>

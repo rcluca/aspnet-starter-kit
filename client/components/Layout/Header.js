@@ -6,6 +6,7 @@ import s from './Header.css';
 import AccountApi from '../../api/accountApi'
 import history from '../../history';
 import * as actionTypes from '../../reducers/actionTypes'
+import * as roles from '../../common/roles'
 
 class Header extends React.Component {
   logout(){
@@ -25,6 +26,24 @@ class Header extends React.Component {
     const {
       user
     } = this.props;
+
+    let userNav;
+    if (user.isLoggedIn){
+      if (user.role === roles.PATIENT){
+        userNav = (
+          <Nav>
+            <NavItem eventKey={1} href="#"><Link to="/patient/profile">Profile</Link></NavItem>
+          </Nav>
+        );
+      }
+      else {
+        userNav = (
+          <Nav>
+            <NavItem eventKey={1} href="#"><Link to="/physician/patients">Patients</Link></NavItem>
+          </Nav>
+        );
+      }
+    }
 
     const accountNav = !user.isLoggedIn ?
     (
@@ -47,6 +66,7 @@ class Header extends React.Component {
               <Link to="/">Tempus Health Tracker</Link>
             </Navbar.Brand>
           </Navbar.Header>
+          {userNav}
           {accountNav}
         </Navbar>
       </header>
