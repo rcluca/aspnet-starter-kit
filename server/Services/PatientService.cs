@@ -1,4 +1,5 @@
-﻿using server.Dtos;
+﻿using Microsoft.EntityFrameworkCore;
+using server.Dtos;
 using server.Models.Interfaces;
 using server.Services.Interfaces;
 using System;
@@ -36,6 +37,31 @@ namespace server.Services
                 State = patient.State,
                 Zip = patient.Zip
             };
+
+            var appointments = _databaseContext.Appointment.Where(w => w.PatientId == patient.Id)
+                                    .Include(i => i.Purpose)
+                                    .Include(i => i.Physician)
+                                    .ToList();
+
+            if (appointments != null && appointments.Count > 0)
+            {
+                patientProfileDto.Appointments = new List<PatientProfileDto.AppointmentDto>();
+                foreach (var appointment in appointments)
+                {
+                    patientProfileDto.Appointments.Add(new PatientProfileDto.AppointmentDto
+                    {
+                        Id = appointment.Id,
+                        Physician = appointment.Physician.FirstName + " " + appointment.Physician.LastName,
+                        DateAndTime = appointment.DateAndTime,
+                        Purpose = appointment.Purpose.Purpose,
+                        CreatedDateTime = appointment.CreatedDateTime,
+                        CreatedBy = appointment.CreatedBy,
+                        IsApproved = appointment.IsApproved,
+                        IsCanceled = appointment.IsCanceled,
+                        CancelationReason = appointment.CancelationReason
+                    });
+                }
+            }
 
             return patientProfileDto;
         }
