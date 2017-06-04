@@ -140,6 +140,14 @@ class Profile extends React.Component {
                     </thead>
                     <tbody>
                         {sortedAppointments.map((appointment) => {
+                            const dateAndTime = new Date(appointment.dateAndTime);
+                            const cancelButton = !appointment.isCanceled && dateAndTime.getTime() > Date.now() ?
+                            (
+                                <Button bsStyle="warning" onClick={() => this.setState({ cancellingAppointment: true, appointmentToCancelId: appointment.id})}>
+                                    Cancel
+                                </Button>              
+                            ) : "";
+
                             return (
                                 <tr key={appointment.id}>
                                     <td>{appointment.id}</td>
@@ -152,9 +160,7 @@ class Profile extends React.Component {
                                     <td>{appointment.isCanceled ? "Yes" : "No"}</td>
                                     <td>{appointment.cancelationReason}</td>
                                     <td>
-                                        <Button bsStyle="warning" onClick={() => this.setState({ cancellingAppointment: true, appointmentToCancelId: appointment.id})}>
-                                            Cancel
-                                        </Button>                                        
+                                        {cancelButton}                                      
                                     </td>
                                 </tr>
                             );

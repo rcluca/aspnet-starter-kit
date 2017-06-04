@@ -62,7 +62,7 @@ namespace server.Services
                     PhysicianId = physician.Id,
                     DateAndTime = appointment.DateAndTime,
                     PurposeId = appointment.PurposeId,
-                    CreatedDateTime = DateTime.UtcNow,
+                    CreatedDateTime = DateTime.Now,
                     CreatedBy = CreatedBy.Physician.ToString()
                 });
             }
@@ -76,6 +76,12 @@ namespace server.Services
 
             if (existingAppointment == null)
                 throw new ArgumentException($"No appointment exists with id '{appointmentCancellation.Id}'");
+
+            if (existingAppointment.IsCanceled)
+                throw new Exception("Appointment is already cancelled.");
+
+            if (existingAppointment.DateAndTime < DateTime.Now)
+                throw new ArgumentOutOfRangeException("Only future appointments can be cancelled.");
 
             existingAppointment.IsCanceled = true;
             existingAppointment.CancellationReason = appointmentCancellation.CancellationReason;
