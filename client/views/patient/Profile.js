@@ -155,7 +155,7 @@ class Profile extends React.Component {
         } = this.state;
 
         const formattedDateOfBirth = new Date(dateOfBirth).toLocaleDateString();
-        const sortedAppointments = orderBy(appointments, ['dateAndTime'], ['desc']);
+        const sortedAppointments = orderBy(appointments, ['dateAndTime'], ['asc']);
 
         const appointmentRows = 
             (sortedAppointments.map((appointment) => {
