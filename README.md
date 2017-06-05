@@ -44,9 +44,15 @@ This should build the application, install all of it's dependencies, create and 
 ### Get Patient Profile by Physician
 Currently, I've hard-coded in the PatientController Patient 2, Cleopatra, so that whenever a Physician clicks on a Patient in the list of Patients, she's the only patient they ever see.  A bug with the default routing that came with the startup project I'm using isn't translating the Id query parameter properly.  I didn't have time to implement a work-around.
 
+### Scheduling Appointments in the Past
+No business logic has been implemented to disallow users from scheduling appointments in the past but this would be a great addition.
+
 ## Miscellaneous
 ### Dates
 More consideration needs to be put into how the dates are stored in order to account for different time zones, both for the user and the server.  Currenlty, I'm saving local time of the user and server, but these could be out of sync if the location of either changes, which is very likely in a production environment.
+
+### Filtering
+Filtering currently only works on Blur, which may not be intuitive.  I would either add a button or implement filtering on Change with the appropriate throttling.  Additionally, filtering is currently being done in the UI but as the data set grows, this would need to be transitioned to the server and some king of paging would need to be implemented.
 
 # Work to be Done
 While I was able to implement a large part of the requirements, I did not have enough time to complete the file uploading/editing.
