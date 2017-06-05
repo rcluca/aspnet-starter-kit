@@ -96,6 +96,13 @@ namespace Server
             {
                 routes.MapRoute("default", "{*url}", new { controller = "Home", action = "Index" });
             });
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+                context.Database.Migrate();
+                context.EnsureSeedData();
+            }
         }
 
         public static void Main()
