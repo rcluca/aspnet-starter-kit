@@ -21,7 +21,32 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
 
+        const {
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            phoneNumber,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            appointments
+        } = this.props.profile;        
+
         this.state = {
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            phoneNumber,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            appointments,            
             approvingAppointment: false,
             appointmentToApproveId: 0,
             cancellingAppointment: false,
@@ -42,8 +67,18 @@ class Profile extends React.Component {
 
         AppointmentApi.approve(appointmentToApproveId)
         .then(() => {
+            const updatedAppointments = this.state.appointments.map((appointment) => {
+                if (appointment.id === appointmentToApproveId){
+                    return Object.assign({}, appointment, {
+                        isApproved: true
+                    });
+                }
+                return appointment;
+            });
+
             this.setState({
-                approvingAppointment: false
+                approvingAppointment: false,
+                appointments: updatedAppointments
             })            
             alert("Appointment was successfully approved.");
         })
@@ -74,8 +109,18 @@ class Profile extends React.Component {
             cancellationReason
         })
         .then(() => {
+            const updatedAppointments = this.state.appointments.map((appointment) => {
+                if (appointment.id === appointmentToCancelId){
+                    return Object.assign({}, appointment, {
+                        isCanceled: true,
+                        cancellationReason
+                    });
+                }
+                return appointment;
+            });
             this.setState({
-                cancellingAppointment: false
+                cancellingAppointment: false,
+                appointments: updatedAppointments
             })            
             alert("Appointment was successfully canceled.");
         })
@@ -107,7 +152,7 @@ class Profile extends React.Component {
             state,
             zip,
             appointments
-        } = this.props.profile;
+        } = this.state;
 
         const formattedDateOfBirth = new Date(dateOfBirth).toLocaleDateString();
         const sortedAppointments = orderBy(appointments, ['dateAndTime'], ['desc']);
@@ -142,7 +187,7 @@ class Profile extends React.Component {
                             <td>{appointment.createdBy}</td>
                             <td>{appointment.isApproved ? "Yes" : "No"}</td>
                             <td>{appointment.isCanceled ? "Yes" : "No"}</td>
-                            <td>{appointment.cancelationReason}</td>
+                            <td>{appointment.cancellationReason}</td>
                             <td>
                                 {approveButton}
                             </td>
@@ -221,7 +266,7 @@ class Profile extends React.Component {
                         <th>Created By</th>
                         <th>Is Approved</th>
                         <th>Is Canceled</th>
-                        <th>Cancelation Reason</th>
+                        <th>Cancellation Reason</th>
                         <th />
                     </tr>
                     </thead>

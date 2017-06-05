@@ -88,7 +88,7 @@ namespace server.Services
                         CreatedBy = appointment.CreatedBy,
                         IsApproved = appointment.IsApproved,
                         IsCanceled = appointment.IsCanceled,
-                        CancelationReason = appointment.CancellationReason
+                        CancellationReason = appointment.CancellationReason
                     });
                 }
             }

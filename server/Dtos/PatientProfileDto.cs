@@ -29,7 +29,7 @@ namespace server.Dtos
             public string CreatedBy { get; set; }
             public bool IsApproved { get; set; }
             public bool IsCanceled { get; set; }
-            public string CancelationReason { get; set; }
+            public string CancellationReason { get; set; }
         }
     }
 }

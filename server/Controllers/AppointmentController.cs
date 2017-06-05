@@ -56,7 +56,7 @@ namespace server.Controllers
         [HttpPut("cancel")]
         public IActionResult Cancel([FromBody] AppointmentCancellationDto appointmentCancellation)
         {
-            _logger.LogInformation("Canceling appointment.");
+            _logger.LogInformation("Cancelling appointment.");
             _logger.LogInformation("Cancellation Reason: " + appointmentCancellation.CancellationReason);
 
             _appointmentService.Cancel(appointmentCancellation);
