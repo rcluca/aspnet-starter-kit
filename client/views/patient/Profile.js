@@ -177,13 +177,17 @@ class Profile extends React.Component {
 
                     const style = dateAndTime.getTime() > Date.now() ? {} : { backgroundColor: "lightgrey" };
 
+                    var options = { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" };  
+                    const formattedDateAndTime = dateAndTime.toLocaleDateString("en-us", options);
+                    const formattedcreateDateTime = new Date(appointment.createdDateTime).toLocaleDateString("en-us", options);
+
                     return (
                         <tr key={appointment.id} style={style}>
                             <td>{appointment.id}</td>
                             <td>{appointment.physician}</td>
-                            <td>{appointment.dateAndTime}</td>
+                            <td>{formattedDateAndTime}</td>
                             <td>{appointment.purpose}</td>
-                            <td>{appointment.createdDateTime}</td>
+                            <td>{formattedcreateDateTime}</td>
                             <td>{appointment.createdBy}</td>
                             <td>{appointment.isApproved ? "Yes" : "No"}</td>
                             <td>{appointment.isCanceled ? "Yes" : "No"}</td>
