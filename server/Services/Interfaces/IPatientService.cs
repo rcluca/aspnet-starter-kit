@@ -9,6 +9,7 @@ namespace server.Services.Interfaces
     public interface IPatientService
     {
         PatientProfileDto GetProfile(string patientEmail);
+        PatientProfileDto GetProfile(int patientId, string physicianEmail);
         List<NameDto> GetNames();
     }
 }

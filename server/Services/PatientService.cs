@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Dtos;
+using server.Models;
 using server.Models.Interfaces;
 using server.Services.Interfaces;
 using System;
@@ -21,9 +22,28 @@ namespace server.Services
             var patient = _databaseContext.Patient.SingleOrDefault(p => p.Email == patientEmail);
 
             if (patient == null)
-                throw new ArgumentException($"No patient could be found with the email '{patientEmail}'.");
+                throw new ArgumentException($"No patient could be found with email '{patientEmail}'.");
 
+            return GetProfile(patient);
+        }
 
+        public PatientProfileDto GetProfile(int patientId, string physicianEmail)
+        {
+            var patient = _databaseContext.Patient.SingleOrDefault(p => p.Id == patientId);
+
+            if (patient == null)
+                throw new ArgumentException($"No patient could be found with id '{patientId}'.");
+
+            var physician = _databaseContext.Physician.SingleOrDefault(p => p.Email == physicianEmail);
+
+            if (physician == null)
+                throw new ArgumentException($"No physician could be found with email '{physicianEmail}'.");
+
+            return GetProfile(patient, physician);
+        }
+
+        private PatientProfileDto GetProfile(Patient patient, Physician physician = null)
+        {
             var patientProfileDto = new PatientProfileDto
             {
                 FirstName = patient.FirstName,
@@ -38,10 +58,20 @@ namespace server.Services
                 Zip = patient.Zip
             };
 
-            var appointments = _databaseContext.Appointment.Where(w => w.PatientId == patient.Id)
+            List<Appointment> appointments;
+            
+            if (physician == null)
+                appointments = _databaseContext.Appointment
+                                    .Where(w => w.PatientId == patient.Id)
                                     .Include(i => i.Purpose)
                                     .Include(i => i.Physician)
                                     .ToList();
+            else
+                appointments = _databaseContext.Appointment
+                                                    .Where(w => w.PatientId == patient.Id && w.PhysicianId == physician.Id)
+                                                    .Include(i => i.Purpose)
+                                                    .Include(i => i.Physician)
+                                                    .ToList();
 
             if (appointments != null && appointments.Count > 0)
             {

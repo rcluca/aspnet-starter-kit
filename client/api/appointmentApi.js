@@ -12,6 +12,10 @@ class AppointmentApi {
     static cancel(appointmentCancelation){
         return axios.put('/api/appointment/cancel', appointmentCancelation);
     }
+
+    static approve(id){
+        return axios.put(`/api/appointment/approve/${id}`);
+    }    
 }
 
 export default AppointmentApi;

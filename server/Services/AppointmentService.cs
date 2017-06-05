@@ -90,6 +90,31 @@ namespace server.Services
             _databaseContext.SaveChanges();
         }
 
+        public void Approve(int id, string role)
+        {
+            var existingAppointment = _databaseContext.Appointment.SingleOrDefault(s => s.Id == id);
+
+            if (existingAppointment == null)
+                throw new ArgumentException($"No appointment exists with id '{id}'");
+
+            if (existingAppointment.IsApproved)
+                throw new Exception("Appointment is already approved.");
+
+            if (existingAppointment.IsCanceled)
+                throw new Exception("Canceled appointments can't be approved.");
+
+            if (existingAppointment.CreatedBy == role)
+                throw new Exception("Appointment can't be approved by same person who created appointment.");
+
+            if (existingAppointment.DateAndTime < DateTime.Now)
+                throw new ArgumentOutOfRangeException("Only future appointments can be approved.");
+
+            existingAppointment.IsApproved = true;
+            _databaseContext.Appointment.Update(existingAppointment);
+
+            _databaseContext.SaveChanges();
+        }
+
         private IDatabaseContext _databaseContext;
     }
 }

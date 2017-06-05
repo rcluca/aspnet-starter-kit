@@ -64,6 +64,19 @@ namespace server.Controllers
             return Ok();
         }
 
+        [HttpPut("approve/{id}")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            _logger.LogInformation("Approving appointment.");
+
+            var user = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            _appointmentService.Approve(id, roles.First());
+
+            return Ok();
+        }
+
         private readonly ILogger _logger;
         private readonly IAppointmentService _appointmentService;
         private readonly UserManager<User> _userManager;

@@ -3,6 +3,7 @@ import {
     Table,
     FormControl
 } from 'react-bootstrap'
+import Link from '../../components/Link';
 
 class Patients extends React.Component {
     constructor(props){
@@ -69,7 +70,7 @@ class Patients extends React.Component {
                             return (
                                 <tr key={patient.id}>
                                     <td>{patient.id}</td>
-                                    <td>{patient.firstName} {patient.lastName}</td>
+                                    <td><Link to={`/patient/profile/${patient.id}`}>{patient.firstName} {patient.lastName}</Link></td>
                                     <td>{patient.email}</td>
                                     <td>{patient.phoneNumber}</td>
                                     <td>{patient.city}</td>

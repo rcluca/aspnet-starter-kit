@@ -50,7 +50,7 @@ namespace Server.Controllers
                     //return RedirectToLocal(returnUrl);
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     var roles = await _userManager.GetRolesAsync(user);
-                    return Ok(new { role = roles.Contains("Patient") ? "patient" : "physician" });
+                    return Ok(new { role = roles.Contains("Patient") ? "Patient" : "Physician" });
                 }
                 if (result.IsLockedOut)
                 {
@@ -88,7 +88,7 @@ namespace Server.Controllers
                 {
                     IsUserLoggedIn = true,
                     Email = User.Identity.Name,
-                    Role = User.IsInRole("Patient") ? "patient" : "physician"
+                    Role = User.IsInRole("Patient") ? "Patient" : "Physician"
                 });
             else
                 return Ok(new

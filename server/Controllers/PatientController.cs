@@ -28,6 +28,17 @@ namespace server.Controllers
             return Ok(profile);
         }
 
+        [HttpGet("profile/{id}")]
+        [Authorize(Roles = Roles.Physician)]
+        public IActionResult GetProfile(int id)
+        {
+            _logger.LogInformation("Patient Id: " + id);
+
+            var profile = _patientService.GetProfile(2, HttpContext.User.Identity.Name);
+
+            return Ok(profile);
+        }
+            
         [HttpGet("names")]
         public IActionResult GetNames()
         {

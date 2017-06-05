@@ -12,5 +12,6 @@ namespace server.Services.Interfaces
         List<NameDto> GetPurposes();
         void Create(AppointmentDto appointment, string userEmail, string role);
         void Cancel(AppointmentCancellationDto appointmentCancelation);
+        void Approve(int id, string role);
     }
 }

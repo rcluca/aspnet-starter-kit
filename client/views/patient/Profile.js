@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import {
     Grid,
     Row,
@@ -14,17 +15,48 @@ import {
 import orderBy from 'lodash.orderby'
 import Link from '../../components/Link';
 import AppointmentApi from '../../api/appointmentApi'
+import * as roles from '../../common/roles'
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            approvingAppointment: false,
+            appointmentToApproveId: 0,
             cancellingAppointment: false,
             appointmentToCancelId: 0,
             cancellationReason: ""
         }
     }
+    approveAppointment(e){
+        e.preventDefault();
+
+        const {
+            user
+        } = this.props;
+
+        const {
+            appointmentToApproveId
+        } = this.state;
+
+        AppointmentApi.approve(appointmentToApproveId)
+        .then(() => {
+            this.setState({
+                approvingAppointment: false
+            })            
+            alert("Appointment was successfully approved.");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    hideApproveModal(){
+        this.setState({
+            approvingAppointment: false,
+            appointmentToApproveId: 0,           
+        })
+    }    
     cancelAppointment(e){
         e.preventDefault();
 
@@ -60,6 +92,10 @@ class Profile extends React.Component {
     }
     render() {
         const {
+            user
+        } = this.props;
+
+        const {
             firstName,
             lastName,
             dateOfBirth,
@@ -76,8 +112,59 @@ class Profile extends React.Component {
         const formattedDateOfBirth = new Date(dateOfBirth).toLocaleDateString();
         const sortedAppointments = orderBy(appointments, ['dateAndTime'], ['desc']);
 
+        const appointmentRows = 
+            (sortedAppointments.map((appointment) => {
+                    const dateAndTime = new Date(appointment.dateAndTime);
+
+                    const approveButton = !appointment.isApproved && !appointment.isCanceled && user.role !== appointment.createdBy && dateAndTime.getTime() > Date.now() ?
+                    (
+                        <Button bsStyle="success" onClick={() => this.setState({ approvingAppointment: true, appointmentToApproveId: appointment.id})}>
+                            Approve
+                        </Button>              
+                    ) : "";
+                    
+                    const cancelButton = !appointment.isCanceled && dateAndTime.getTime() > Date.now() ?
+                    (
+                        <Button bsStyle="warning" onClick={() => this.setState({ cancellingAppointment: true, appointmentToCancelId: appointment.id})}>
+                            Cancel
+                        </Button>              
+                    ) : "";
+
+                    const style = dateAndTime.getTime() > Date.now() ? {} : { backgroundColor: "lightgrey" };
+
+                    return (
+                        <tr key={appointment.id} style={style}>
+                            <td>{appointment.id}</td>
+                            <td>{appointment.physician}</td>
+                            <td>{appointment.dateAndTime}</td>
+                            <td>{appointment.purpose}</td>
+                            <td>{appointment.createdDateTime}</td>
+                            <td>{appointment.createdBy}</td>
+                            <td>{appointment.isApproved ? "Yes" : "No"}</td>
+                            <td>{appointment.isCanceled ? "Yes" : "No"}</td>
+                            <td>{appointment.cancelationReason}</td>
+                            <td>
+                                {approveButton}
+                            </td>
+                            <td>
+                                {cancelButton}                                      
+                            </td>
+                        </tr>
+                    );
+                })
+            );        
+
         return (
             <div>
+                <Modal show={this.state.approvingAppointment} onHide={() => this.hideApproveModal()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Approve Appointment {this.state.appointmentToApproveId}</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Footer>
+                        <Button bsStyle="success" onClick={(e) => this.approveAppointment(e)}>Approve Appointment</Button>
+                    </Modal.Footer>
+                </Modal>                
                 <Modal show={this.state.cancellingAppointment} onHide={() => this.hideCancelModal()}>
                     <Modal.Header closeButton>
                         <Modal.Title>Cancel Appointment {this.state.appointmentToCancelId}</Modal.Title>
@@ -139,32 +226,7 @@ class Profile extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {sortedAppointments.map((appointment) => {
-                            const dateAndTime = new Date(appointment.dateAndTime);
-                            const cancelButton = !appointment.isCanceled && dateAndTime.getTime() > Date.now() ?
-                            (
-                                <Button bsStyle="warning" onClick={() => this.setState({ cancellingAppointment: true, appointmentToCancelId: appointment.id})}>
-                                    Cancel
-                                </Button>              
-                            ) : "";
-
-                            return (
-                                <tr key={appointment.id}>
-                                    <td>{appointment.id}</td>
-                                    <td>{appointment.physician}</td>
-                                    <td>{appointment.dateAndTime}</td>
-                                    <td>{appointment.purpose}</td>
-                                    <td>{appointment.createdDateTime}</td>
-                                    <td>{appointment.createdBy}</td>
-                                    <td>{appointment.isApproved ? "Yes" : "No"}</td>
-                                    <td>{appointment.isCanceled ? "Yes" : "No"}</td>
-                                    <td>{appointment.cancelationReason}</td>
-                                    <td>
-                                        {cancelButton}                                      
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                        {appointmentRows}
                     </tbody>
                 </Table>                
             </div>
@@ -172,4 +234,10 @@ class Profile extends React.Component {
     }
 }
 
-export default Profile;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+export default connect(mapStateToProps, null)(Profile);;
