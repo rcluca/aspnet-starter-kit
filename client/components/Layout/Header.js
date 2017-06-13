@@ -63,7 +63,7 @@ class Header extends React.Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Tempus Health Tracker</Link>
+              <Link to="/">Health Tracker</Link>
             </Navbar.Brand>
           </Navbar.Header>
           {userNav}
