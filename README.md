@@ -71,7 +71,7 @@ The files would probably be stored in the database as blobs, but if the file siz
 # Final Touches
 ## Server
 ### Tests
-Back-end tests need to be written.  I would write them at the API level instead of the class/method level because of the enormous benefits to refactoring gained by having a stable API.  Additionally, API unit tests can be easily changed to integration tests by not mocking the database.  **I would love to discuss this more as I've spent significant time in this area**.
+Back-end tests need to be written.  I would write them at the API level instead of the class/method level because of the enormous benefits to refactoring gained by having a stable API.  Additionally, API unit tests can be easily changed to integration tests by not mocking the database.  **I welcome discussion on this topic as I've spent significant time in this area**.
 
 In terms of front-end tests, I would write few to none.  Through experience, I've found that the UI changes so frequently that these tests are always changing.  It's also rather hard to write these tests, typically taking longer than implementing the functionality, and quite easy to manually QA changes through the browser.  Lastly, but not leastly, with React being so modular, changes in one part of the UI code rarely effect any other part, so risk of breaking behavior is minimal.
 
@@ -82,14 +82,14 @@ I threw exceptions when the input didn't pass business validation on the server.
 I've integrated the authentication and session management into the application but in real life, where a company has many applications, this is not ideal for the users or the IT department who is managing permissions.  I would refactor this into one or two separate services (Authentication and Sessions services) so that all applications can use them.  Further, there might be a distinction between external and internal applications, so this could lead to two instances or implementations of the services.
 
 ### Microservices
-My company has made a huge push toward microservices in the last year, with successes and failures.  I'm not quite sure yet the best way to "do" microservices, and I know many people have the same problem, but I have found benefits in breaking things apart somewhat.  In the context of this application, I would probably breaking things along domain contexts, like Patients, Physicians, and Appointments.  **I would love to talk more about this and see how the Tempus team approaches scaling and complexity**.
+My company has made a huge push toward microservices in the last year, with successes and failures.  I'm not quite sure yet the best way to "do" microservices, and I know many people have the same problem, but I have found benefits in breaking things apart somewhat.  In the context of this application, I would probably breaking things along domain contexts, like Patients, Physicians, and Appointments.  **I welcome discussion on approaching scaling and complexity**.
 
 ### Logging
-I added logging somewhat sporadically as I needed it to debug but for a production ready application, I would be more strategic about this.  **We can discuss how to determine what should be logged and how**.
+I added logging somewhat sporadically as I needed it to debug but for a production ready application, I would be more strategic about this.  **I welcome discussion on how to determine what should be logged and how**.
 
 ## UI
 ### UI Modularization
-I didn't spend too much time on breaking apart my UI views into separate components but this would be beneficial to better separate concerns (SOLID principles).  For example, I would split out the Approve and Cancel buttons and their functionality from the Profile page.  **I would love to discuss this more including the how and why**.
+I didn't spend too much time on breaking apart my UI views into separate components but this would be beneficial to better separate concerns (SOLID principles).  For example, I would split out the Approve and Cancel buttons and their functionality from the Profile page.  **I welcome discussion on the how and why of separating components**.
 
 ### UI/UX Design
 I used React Bootstrap but other than that, I mostly put this on the backburner to get the functional requirements completed.  However, I would spend more time cleaning things up and thinking about where things should be positioned and what copy should be displayed, etc.  Full admission as well, I'm not very good at UI/UX design, so I would definitely partner with someone with those skills.
